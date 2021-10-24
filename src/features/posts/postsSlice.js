@@ -49,7 +49,9 @@ const newPostSlice = {
 }
 
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
+  console.log('inside dispatch')
   const response = await client.get('/fakeApi/posts')
+  console.log('Response is', response)
   return response.data
 })
 
@@ -63,18 +65,17 @@ const postSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(
-        fetchPosts.pending,
-        (state, action) => (state.status = statusTypes.LOADING)
-      )
-      .addCase(
-        fetchPosts.fulfilled,
-        (state, action) => (state.status = statusTypes.SUCCESS)
-      )
+      .addCase(fetchPosts.pending, (state, action) => {
+        state.status = statusTypes.LOADING
+      })
+      .addCase(fetchPosts.fulfilled, (state, action) => {
+        state.status = statusTypes.SUCCESS
+        state.posts = state.posts.concat(action.payload)
+      })
       .addCase(fetchPosts.rejected, (state, action) => {
-        state.status = statusTypes.FAILED;
-        state.error = action.payload;
-        return state;
+        state.status = statusTypes.FAILED
+        state.error = action.error.message
+        return state
       })
   },
 })
