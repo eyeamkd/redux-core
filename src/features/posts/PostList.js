@@ -9,6 +9,7 @@ import { fetchPosts } from './postsSlice'
 import { useDispatch } from 'react-redux'
 import statusType from '../../utils/statusType'
 import { Spinner } from '../../components/Spinner'
+import { getUsers } from '../users/userSlice'
 
 function PostList() {
   const posts = useSelector(getAllPosts)
@@ -24,7 +25,8 @@ function PostList() {
   useEffect(() => {
     if (postStatus === statusType.IDLE) {
       console.log('Post status', postStatus)
-      dispatch(fetchPosts())
+      dispatch(fetchPosts()) 
+      dispatch(getUsers())
     }
   }, [postStatus, dispatch])
 
@@ -38,7 +40,7 @@ function PostList() {
         </Link>
         <p>
           Posted By:
-          <UserName userId={post.userId} />
+          <UserName userId={post.user} />
         </p>
         <ReactionButtons post={post} />
         <TimeAgo timestamp={post.date} />
