@@ -12,6 +12,8 @@ import EditPostForm from './features/posts/EditPostForm';
 import NewPostSub from './features/posts/NewPostSub';
 import PostList from './features/posts/PostList'; 
 import { SinglePostPage } from './features/posts/SinglePostPage';
+import SingleUserPage from './features/users/singleUserPage';
+import UsersList from './features/users/UsersList';
 
 
 function App() {
@@ -33,6 +35,8 @@ function App() {
           <Route exact path="/posts/:postId" component={SinglePostPage}/> 
           <Route exact path="/editPost/:id" component={EditPostForm}/> 
           <Route exact path="/subscriptions" component={NewPostSub}/>
+          <Route exact path="/users" component={UsersList}/>
+          <Route exact path="/user/:userId" component={SingleUserPage}/>
           <Redirect to="/" />
         </Switch>
       </div>

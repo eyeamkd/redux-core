@@ -10,9 +10,12 @@ const initialUserState = {
 
 export const getUsers = createAsyncThunk('users/getUsers', async () => {
   const users = await client.get('/fakeApi/users')
-  console.log('Users are ', users)
   return users
-})
+}) 
+
+export const getUserById = (state,userId)=>{
+    return state.users.users.find(user=> user.id ===userId)
+}
 
 const userSlice = createSlice({
   name: 'users',

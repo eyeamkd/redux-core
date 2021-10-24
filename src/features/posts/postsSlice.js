@@ -75,7 +75,8 @@ const postSlice = createSlice({
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = statusTypes.SUCCESS
-        state.posts = state.posts.concat(action.payload)
+        state.posts = state.posts.concat(action.payload) 
+        return state
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = statusTypes.FAILED
@@ -88,6 +89,7 @@ const postSlice = createSlice({
       .addCase(submitNewPost.fulfilled,(state,action)=>{
         state.status = statusTypes.SUCCESS 
         state.posts.push(action.payload)
+        return state
       }) 
       .addCase(submitNewPost.rejected,(state,action)=>{
         state.status = statusTypes.FAILED 
