@@ -6,7 +6,8 @@ import statusTypes from '../../utils/statusType'
 const initialState = {
   posts: [],
   status: statusTypes.IDLE,
-  error: null,
+  error: null, 
+  submitPostError:null
 }
 
 //Selector Functions
@@ -53,13 +54,17 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
   const response = await client.get('/fakeApi/posts')
   console.log('Response is', response)
   return response.data
+}) 
+
+export const submitNewPost = createAsyncThunk('posts/newPost',async (postData)=>{
+  const response = await client.post('/fakeApi/posts', postData); 
+  return response.data;
 })
 
 const postSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
-    newPost: newPostSlice,
     editPost: editPostSlice,
     reactions: updatePostReactionSlice,
   },
@@ -76,7 +81,19 @@ const postSlice = createSlice({
         state.status = statusTypes.FAILED
         state.error = action.error.message
         return state
+      }) 
+      .addCase(submitNewPost.pending,(state,action)=>{
+        state.status = statusTypes.LOADING
       })
+      .addCase(submitNewPost.fulfilled,(state,action)=>{
+        state.status = statusTypes.SUCCESS 
+        state.posts.push(action.payload)
+      }) 
+      .addCase(submitNewPost.rejected,(state,action)=>{
+        state.status = statusTypes.FAILED 
+        state.submitPostError = action.error
+      }) 
+
   },
 })
 

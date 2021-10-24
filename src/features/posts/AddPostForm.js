@@ -1,7 +1,7 @@
 import { nanoid } from '@reduxjs/toolkit'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { newPost } from './postsSlice'
+import { newPost, submitNewPost } from './postsSlice'
 
 function AddPostForm() {
   const [postTitle, setpostTitle] = useState('')
@@ -13,10 +13,12 @@ function AddPostForm() {
   const onSubmit = () => {
     if (postTitle && postDescription) {
       dispatch(
-        newPost({
+        submitNewPost({
           title: postTitle,
-          description: postDescription,
+          content: postDescription,
           id: nanoid(),
+          date: new Date().toISOString(),
+          user: userId
         })
       )
       setpostTitle('')
@@ -26,11 +28,17 @@ function AddPostForm() {
 
   const UsersDropDown = () => {
     console.log('Users are', users)
-    return users.map((user) => (
+    return( 
+    <select id="users" value={userId} onChange={(e)=>setuserId(e.target.value)}> 
+    {
+     users.map((user) => ( 
       <option key={user.id} value={user.id}>
         {user.name}
       </option>
-    ))
+    )) 
+    }
+    </select> 
+    ) 
   }
 
   return (
