@@ -1,11 +1,31 @@
+import { nanoid } from '@reduxjs/toolkit';
 import React, { useState } from 'react'; 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { newPost } from './postsSlice';
 
 function AddPostForm() {
-  const [postTitle, setpostTitle] = useState('')
-  const [postDescription, setpostDescription] = useState('') 
-    const dispatch = useDispatch();
+  const [postTitle, setpostTitle] = useState('');
+  const [postDescription, setpostDescription] = useState(''); 
+  const [userId, setuserId] = useState();
+    const dispatch = useDispatch(); 
+    const users = useSelector(state => state.users); 
+
+    const onSubmit = () => { 
+        if(postTitle&&postDescription){ 
+            dispatch(newPost({title:postTitle, description:postDescription, id:nanoid()})); 
+            setpostTitle('');
+            setpostDescription('');
+        }
+    } 
+
+    const UsersDropDown = () => ( 
+        users.map(user => ( 
+            <option key={user.id} value={user.id}>
+                {user.name}
+            </option>
+        ))
+    )
+
 
   return (
     <section>
@@ -25,9 +45,10 @@ function AddPostForm() {
           name="postContent"
           value={postDescription}
           onChange={(e) => setpostDescription(e.target.value)}
-        />
-        <button type="button" onClick={()=> dispatch(newPost({title:postTitle, description:postDescription, id:'3'})) } >Save Post</button>
-      </form>
+        /> 
+        <UsersDropDown/>
+        <button type="button" onClick={onSubmit} >Save Post</button>
+      </form> 
     </section>
   )
 }
