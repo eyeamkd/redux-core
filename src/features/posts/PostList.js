@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import UserName from './postAuthor'
+import ReactionButtons from './ReactionButtons'
 import TimeAgo from './TimeAgo'
 
 function PostList() {
@@ -21,7 +22,8 @@ function PostList() {
         <p>
           Posted By:
           <UserName userId={post.userId} />
-        </p> 
+        </p>  
+        <ReactionButtons post={post}/>
         <TimeAgo timestamp ={post.date}/>
       </article>
     )
