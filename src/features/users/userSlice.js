@@ -13,7 +13,8 @@ export const getUsers = createAsyncThunk('users/getUsers', async () => {
   return users
 }) 
 
-export const getUserById = (state,userId)=>{
+export const getUserById = (state,userId)=>{ 
+    console.log("User id", userId);
     return state.users.users.find(user=> user.id ===userId)
 }
 

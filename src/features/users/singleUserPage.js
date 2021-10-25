@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom'
 import { getAllPosts } from '../posts/postsSlice'
 import { getUserById } from './userSlice'
 
-function SingleUserPage({ userId }) {
-  const user = useSelector(getUserById) 
+function SingleUserPage({ match }) { 
+  const {userId} = match.params;
+  const user = useSelector((state)=>getUserById(state,userId)) 
   console.log("User is",user);
   const postsForUser = useSelector((state) => {
     const allPosts = getAllPosts(state)
@@ -21,7 +22,7 @@ function SingleUserPage({ userId }) {
   return (
     <section>
       <h2>{user.name}</h2>
-
+      <h4>My Posts</h4>
       <ul>{postTitles}</ul>
     </section>
   )
