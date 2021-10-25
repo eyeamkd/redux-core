@@ -9,7 +9,8 @@ const initialState = {
 }
 
 export const fetchNotifications = createAsyncThunk('notifications/fetchNotifications',async(_,{getState})=>{
-    const allNotifications = getAllNotifications(getState()); 
+    const allNotifications   = getAllNotifications(getState());  
+    console.log("All notifications are like", allNotifications);
     const [latestNotification] = allNotifications; 
     const latestTimestamp = latestNotification? latestNotification.date : ''
     const response = await client.get(`/fakeApi/notifications?since=${latestTimestamp}`) 
@@ -18,7 +19,7 @@ export const fetchNotifications = createAsyncThunk('notifications/fetchNotificat
 
 
 export const getAllNotifications = (state) => {
-    return state.notifications;
+    return state.notifications.notifications;
 }
 
 
@@ -27,7 +28,7 @@ const notificationSlice = createSlice({
     initialState,
     extraReducers:{ 
         [fetchNotifications.fulfilled]:(state,action)=>{ 
-            state.notifications.push(action.payload);   
+            state.notifications.push(...action.payload);   
             state.notifications.sort((a,b)=>b.date.localeCompare(a.date));
             state.notificationsStatus = statusType.SUCCESS;
         },

@@ -6,9 +6,10 @@ import { fetchNotifications, getAllNotifications } from './notificationSlice'
 
 function NotificationList() {
   const notifications = useSelector(getAllNotifications)
-  const users = useSelector(getUsers)
+  const users = useSelector(state=>state.users.users) 
+  console.log("users")
  console.log("Notifications are ", notifications);
-  const renderedNotifications = notifications.notifications.map((notification) => {
+  const renderedNotifications = notifications.map((notification) => {
     const date = parseISO(notification.date)
     const timeAgo = formatDistanceToNow(date)
     const user = users.find((user) => user.id === notification.user) || {
