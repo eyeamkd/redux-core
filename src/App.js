@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom'
 
 import { Navbar } from './app/Navbar';
+import NotificationList from './features/notifications/NotificationList';
 import AddPostForm from './features/posts/AddPostForm';
 import EditPostForm from './features/posts/EditPostForm';
 import NewPostSub from './features/posts/NewPostSub';
@@ -37,6 +38,7 @@ function App() {
           <Route exact path="/subscriptions" component={NewPostSub}/>
           <Route exact path="/users" component={UsersList}/>
           <Route exact path="/user/:userId" component={SingleUserPage}/>
+          <Route exact path="/notifications" component={NotificationList}/>
           <Redirect to="/" />
         </Switch>
       </div>
