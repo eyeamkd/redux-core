@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit'
 import { sub } from 'date-fns'
 import { client } from '../../api/client'
 import statusTypes from '../../utils/statusType'
@@ -6,8 +6,8 @@ import statusTypes from '../../utils/statusType'
 const initialState = {
   posts: [],
   status: statusTypes.IDLE,
-  error: null, 
-  submitPostError:null
+  error: null,
+  submitPostError: null,
 }
 
 //Selector Functions
@@ -15,6 +15,11 @@ export const getAllPosts = (state) => state.posts.posts
 
 export const getPostById = (state, postId) =>
   state.posts.find((post) => post.id === postId)
+
+export const getFilteredPosts = createSelector(
+  [getAllPosts, (state, userId) => userId],
+  (posts, userId) => posts.filter((post) => post.user === userId)
+)
 
 const getPostFromState = (state, action) => {
   return state.posts.find((post) => post.id === action.payload.id)
@@ -54,12 +59,15 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
   const response = await client.get('/fakeApi/posts')
   console.log('Response is', response)
   return response.data
-}) 
-
-export const submitNewPost = createAsyncThunk('posts/newPost',async (postData)=>{
-  const response = await client.post('/fakeApi/posts', postData); 
-  return response.data;
 })
+
+export const submitNewPost = createAsyncThunk(
+  'posts/newPost',
+  async (postData) => {
+    const response = await client.post('/fakeApi/posts', postData)
+    return response.data
+  }
+)
 
 const postSlice = createSlice({
   name: 'posts',
@@ -75,27 +83,26 @@ const postSlice = createSlice({
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = statusTypes.SUCCESS
-        state.posts = state.posts.concat(action.payload) 
+        state.posts = state.posts.concat(action.payload)
         return state
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = statusTypes.FAILED
         state.error = action.error.message
         return state
-      }) 
-      .addCase(submitNewPost.pending,(state,action)=>{
+      })
+      .addCase(submitNewPost.pending, (state, action) => {
         state.status = statusTypes.LOADING
       })
-      .addCase(submitNewPost.fulfilled,(state,action)=>{
-        state.status = statusTypes.SUCCESS 
+      .addCase(submitNewPost.fulfilled, (state, action) => {
+        state.status = statusTypes.SUCCESS
         state.posts.push(action.payload)
         return state
-      }) 
-      .addCase(submitNewPost.rejected,(state,action)=>{
-        state.status = statusTypes.FAILED 
+      })
+      .addCase(submitNewPost.rejected, (state, action) => {
+        state.status = statusTypes.FAILED
         state.submitPostError = action.error
-      }) 
-
+      })
   },
 })
 

@@ -1,17 +1,17 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+// import {getState} from 'redux';
+import { useSelector, getState } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { getAllPosts } from '../posts/postsSlice'
+import { getAllPosts, getFilteredPosts } from '../posts/postsSlice'
 import { getUserById } from './userSlice'
+import store from '../../app/store';
 
 function SingleUserPage({ match }) { 
   const {userId} = match.params;
   const user = useSelector((state)=>getUserById(state,userId)) 
-  console.log("User is",user);
-  const postsForUser = useSelector((state) => {
-    const allPosts = getAllPosts(state)
-    return allPosts.filter((post) => post.user === userId)
-  })
+  console.log("User is",user); 
+  const state = store.getState();
+  const postsForUser = getFilteredPosts(state, userId);
 
   const postTitles = postsForUser.map((post) => (
     <li key={post.id}>
